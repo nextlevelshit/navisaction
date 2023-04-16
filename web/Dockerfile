@@ -1,5 +1,5 @@
 # Use node:16.13.2 as the base image
-FROM node:latest AS builder
+FROM node:18 AS builder
 # Set the working directory
 WORKDIR /app
 # Copy the project files to the container

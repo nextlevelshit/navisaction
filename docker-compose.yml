@@ -1,0 +1,21 @@
+version: '3.9'
+
+services:
+  api:
+    build: ./api
+    ports:
+      - "${API_PORT}:${API_PORT}"
+    environment:
+      - API_PORT=${API_PORT}
+    volumes:
+      - ./api/uploads:/app/uploads
+
+  web:
+    build: ./web
+    ports:
+      - "${WEB_PORT}:80" # Nginx runs on port 80 by default
+    environment:
+      - API_URL=${API_URL}
+      - API_PORT=${API_PORT}
+    depends_on:
+      - api
