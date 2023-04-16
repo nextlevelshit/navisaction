@@ -18,7 +18,7 @@ function parseResponseOrError(res) {
 class Api {
 	async bootstrap() {
 		this.axiosInstance = new axios.create({
-			baseURL: process.env.API_URL ?? "http://localhost:3000"
+			baseURL: process.env.API_URL ?? "http://localhost:3000/api"
 		})
 	}
 
@@ -44,12 +44,13 @@ class Api {
 			.catch(parseResponseOrError);
 	}
 
-	async upload() {
+	async upload(formData, config = {}) {
 		await this.bootstrap();
 		return await this.axiosInstance
-			.get(`/carts?filters[fingerprint][$eq]=${store.fingerprint}&populate=*`, {
-				data: {
-					fingerprint: store.fingerprint
+			.post("/upload", formData, {
+				...config,
+				headers: {
+					"Content-Type": "multipart/form-data",
 				}
 			})
 			.then(parseResponseOrError)

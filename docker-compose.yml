@@ -1,21 +1,53 @@
 version: '3.9'
 
 services:
+  pxy:
+    build: ./proxy
+    container_name: pxy
+    ports:
+      - "80:80"
+      - "443:443"
+    env_file:
+      - .env
+    environment:
+      CERT_HOST: ${CERT_HOST}
+      APP_HOST: ${APP_HOST}
+    depends_on:
+      - web
+      - api
+    networks:
+      - net
+
   api:
+    container_name: api
     build: ./api
     ports:
       - "${API_PORT}:${API_PORT}"
+    env_file:
+      - .env
     environment:
-      - API_PORT=${API_PORT}
+      API_PORT: ${API_PORT}
+      APP_HOST: ${APP_HOST}
     volumes:
       - ./api/uploads:/app/uploads
+    networks:
+      - net
 
   web:
+    container_name: web
     build: ./web
     ports:
-      - "${WEB_PORT}:80" # Nginx runs on port 80 by default
+      - "${WEB_PORT}:${WEB_PORT}"
+    env_file:
+      - .env
     environment:
-      - API_URL=${API_URL}
-      - API_PORT=${API_PORT}
+      API_URL: ${API_URL}
+      API_PORT: ${API_PORT}
+      APP_HOST: ${APP_HOST}
     depends_on:
       - api
+    networks:
+      - net
+
+networks:
+  net:

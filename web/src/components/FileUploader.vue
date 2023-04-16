@@ -28,7 +28,6 @@
 </template>
 
 <script>
-import axios from "axios";
 import api from "@/services/Api";
 
 export default {
@@ -61,7 +60,7 @@ export default {
         files.forEach((file) => {
           formData.append("files", file);
         });
-        const response = await axios.post("http://localhost:3000/upload", formData, {
+        const { files } = await api.upload(formData, {
           onUploadProgress: (progressEvent) => {
             const progress = Math.round(
                 (progressEvent.loaded / progressEvent.total) * 100
@@ -69,11 +68,8 @@ export default {
             this.progress = progress;
             console.log(`Upload progress: ${progress}%`);
           },
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
         });
-        this.images.unshift(...response.data.files.reverse());
+        this.images.unshift(...files.reverse());
         this.$refs.fileInput.value = null;
       } catch (error) {
         console.error(error);

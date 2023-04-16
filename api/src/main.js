@@ -7,7 +7,8 @@ const sharp = require('sharp'); // Install sharp: npm install sharp
 const mime = require('mime'); // Install mime: npm install mime
 
 const app = express();
-const port = 3000;
+const port = process.env.API_PORT || 3000;
+const host = "//" + process.env.APP_HOST || `//localhost:${port}`;
 
 // Allow CORS with custom options
 app.use(cors({
@@ -51,13 +52,13 @@ app.post('/upload', upload.array("files"), (req, res) => {
 
     const images = req.files.map(file => ({
         name: file.originalname,
-        url: `http://localhost:${port}/images/${file.filename}`
+        url: `${host}/api/images/${file.filename}`
     }));
 
     res.send({ success: true, message: 'Files uploaded successfully', files: images });
 });
 
-app.get('/images', (req, res) => {
+app.get('/api/images', (req, res) => {
     fs.readdir(uploadFolder, (err, files) => {
         if (err) {
             return res.status(500).send({ success: false, message: 'Failed to read directory' });
@@ -71,7 +72,7 @@ app.get('/images', (req, res) => {
                 return {
                     name: originalname,
                     timestamp,
-                    url: `http://localhost:${port}/images/${file}`
+                    url: `${host}/api/images/${file}`
                 };
             })
             .sort((a, b) => b.timestamp - a.timestamp)
@@ -82,7 +83,7 @@ app.get('/images', (req, res) => {
 });
 
 
-app.get('/images/:filename', async (req, res) => {
+app.get('/api/images/:filename', async (req, res) => {
     const filePath = path.join(uploadFolder, req.params.filename);
 
     if (!fs.existsSync(filePath)) {
@@ -90,8 +91,7 @@ app.get('/images/:filename', async (req, res) => {
     }
 
     // Set default width and height for resizing
-    const width = parseInt(req.query.width) || 300;
-    const height = parseInt(req.query.height) || 300;
+    const width = parseInt(req.query.width) || 320;
 
     const mimetype = mime.getType(filePath);
 
@@ -103,7 +103,7 @@ app.get('/images/:filename', async (req, res) => {
             const orientation = metadata.orientation;
 
             sharp(filePath)
-                .resize({ height }).withMetadata({ orientation }).toBuffer()
+                .resize({ width }).withMetadata({ orientation }).toBuffer()
                 .then(data => res.send(data))
                 .catch((_) => res.status(500).send({ success: false, message: 'Failed to transform image' }));
         } else {
@@ -116,5 +116,5 @@ app.get('/images/:filename', async (req, res) => {
 });
 
 app.listen(port, () => {
-    console.log(`App listening at http://localhost:${port}`);
+    console.log(`App listening at ${host}`);
 });
