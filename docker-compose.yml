@@ -1,4 +1,4 @@
-version: '2.6'
+version: "3.9"
 
 services:
   pxy:
@@ -51,4 +51,3 @@ services:
 
 networks:
   net:
-    driver: bridge
