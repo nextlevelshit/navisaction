@@ -54,10 +54,10 @@ export default {
         console.error(error);
       }
     },
-    async uploadFiles(files) {
+    async uploadFiles(uploadedFiles) {
       try {
         const formData = new FormData();
-        files.forEach((file) => {
+        uploadedFiles.forEach((file) => {
           formData.append("files", file);
         });
         const { files } = await api.upload(formData, {

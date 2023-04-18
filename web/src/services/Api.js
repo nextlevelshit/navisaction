@@ -2,6 +2,7 @@ import axios, {AxiosError} from "axios";
 import debug from "debug";
 
 const logger = debug("web:v:api");
+const baseURL = process.env.API_URL ?? "/api";
 
 function parseResponseOrError(res) {
 	if (res instanceof AxiosError) {
@@ -18,7 +19,7 @@ function parseResponseOrError(res) {
 class Api {
 	async bootstrap() {
 		this.axiosInstance = new axios.create({
-			baseURL: process.env.API_URL ?? "http://localhost:3000/api"
+			baseURL
 		})
 	}
 

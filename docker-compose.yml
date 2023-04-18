@@ -10,11 +10,17 @@ services:
     env_file:
       - .env
     environment:
-      CERT_HOST: ${CERT_HOST}
       APP_HOST: ${APP_HOST}
+      API_PORT: ${API_PORT}
+      WEB_PORT: ${WEB_PORT}
+      API_CONTAINER: api
+      WEB_CONTAINER: web
     depends_on:
       - web
       - api
+      - ssl
+    volumes:
+      - certs:/etc/ssl:ro
     networks:
       - net
 
@@ -42,12 +48,29 @@ services:
       - .env
     environment:
       API_URL: ${API_URL}
-      API_PORT: ${API_PORT}
-      APP_HOST: ${APP_HOST}
     depends_on:
       - api
     networks:
       - net
 
+  ssl:
+    image: certbot/certbot
+    container_name: ssl
+    env_file:
+      - .env
+    environment:
+      CERT_HOST: ${CERT_HOST}
+      APP_HOST: ${APP_HOST}
+    command: certonly --standalone --agree-tos --non-interactive --email domain@dailysh.it -d ${CERT_HOST} --deploy-hook "cat /etc/letsencrypt/live/${CERT_HOST}/fullchain.pem /etc/letsencrypt/live/${CERT_HOST}/privkey.pem > /etc/letsencrypt/live/${CERT_HOST}/fullchain_concat.pem"
+    volumes:
+      - certs:/etc/letsencrypt
+      - certbot-data:/var/lib/letsencrypt
+    networks:
+      - net
+
 networks:
   net:
+
+volumes:
+  certs:
+  certbot-data:

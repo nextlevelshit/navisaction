@@ -14,20 +14,20 @@ defaults
 
 frontend http
     bind *:80
-    acl host_app_localhost hdr(host) -i app.localhost
-    redirect scheme https code 301 if !{ ssl_fc } host_app_localhost
+    acl host_app hdr(host) -i ${APP_HOST}
+    redirect scheme https code 301 if !{ ssl_fc } host_app
 
 frontend https
     bind *:443 ssl crt /etc/ssl/fullchain.pem
     mode http
-    acl host_app_localhost hdr(host) -i app.localhost
-    acl url_api path_beg -i /api
+    acl host_app hdr(host) -i ${APP_HOST}
+    acl url_api path_beg -i /api /uploads
     acl url_web path_beg -i /
-    use_backend api_backend if host_app_localhost url_api
-    use_backend web_backend if host_app_localhost url_web !url_api
+    use_backend api_backend if host_app url_api
+    use_backend web_backend if host_app url_web !url_api
 
 backend web_backend
-    server web web:8080 check
+    server web ${WEB_CONTAINER}:${WEB_PORT} check
 
 backend api_backend
-    server api api:3000 check
+    server api ${API_CONTAINER}:${API_PORT} check

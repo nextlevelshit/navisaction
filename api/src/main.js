@@ -8,7 +8,7 @@ const mime = require('mime'); // Install mime: npm install mime
 
 const app = express();
 const port = process.env.API_PORT || 3000;
-const host = "//" + process.env.APP_HOST || `//localhost:${port}`;
+const host = "//" + process.env.APP_HOST || `//localhost:${port}`; // @todo wild
 
 // Allow CORS with custom options
 app.use(cors({
@@ -17,7 +17,7 @@ app.use(cors({
     allowedHeaders: ['Content-Type'],
 }));
 
-app.use(express.static('public'));
+app.use(express.static('uploads'));
 app.use(express.json());
 
 const uploadFolder = './uploads';
@@ -43,7 +43,7 @@ const fileFilter = (req, file, cb) => {
 
 const upload = multer({ storage, fileFilter });
 
-app.post('/upload', upload.array("files"), (req, res) => {
+app.post('/api/upload', upload.array("files"), (req, res) => {
     if (!req.files || req.files.length === 0) {
         return res.status(400).send({ success: false, message: 'No files recieved' });
     }
