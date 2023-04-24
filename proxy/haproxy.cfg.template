@@ -35,5 +35,4 @@ backend api_backend
     server api ${API_CONTAINER}:${API_PORT} check
 
 backend ssl_backend
-    server ssl ${SSL_CONTAINER}:8080 check
-    server ssl ${SSL_CONTAINER}:8443 check
+    server ssl ${SSL_CONTAINER}:${SSL_PORT} check

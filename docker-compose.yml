@@ -13,6 +13,8 @@ services:
       APP_HOST: ${APP_HOST}
       API_PORT: ${API_PORT}
       WEB_PORT: ${WEB_PORT}
+      SSL_PORT: ${SSL_PORT}
+      SSL_PORT_SECURE: ${SSL_PORT_SECURE}
       API_CONTAINER: api
       WEB_CONTAINER: web
       SSL_CONTAINER: ssl
@@ -84,8 +86,8 @@ services:
     networks:
       - net
     ports:
-      - "8080:80"
-      - "8443:443"
+      - "${SSL_PORT}:80"
+      - "${SSL_PORT}:443"
 
 networks:
   net:
