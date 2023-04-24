@@ -21,13 +21,19 @@ frontend https
     bind *:443 ssl crt /etc/ssl/fullchain.pem
     mode http
     acl host_app hdr(host) -i ${APP_HOST}
-    acl url_api path_beg -i /api /uploads
     acl url_web path_beg -i /
+    acl url_api path_beg -i /api /uploads
+    acl url_ssl path_beg -i /.well-known
     use_backend api_backend if host_app url_api
-    use_backend web_backend if host_app url_web !url_api
+    use_backend ssl_backend if host_app url_ssl
+    use_backend web_backend if host_app url_web !url_api !url_ssl
 
 backend web_backend
     server web ${WEB_CONTAINER}:${WEB_PORT} check
 
 backend api_backend
     server api ${API_CONTAINER}:${API_PORT} check
+
+backend ssl_backend
+    server ssl ${SSL_CONTAINER}:8080 check
+    server ssl ${SSL_CONTAINER}:8443 check

@@ -15,6 +15,7 @@ services:
       WEB_PORT: ${WEB_PORT}
       API_CONTAINER: api
       WEB_CONTAINER: web
+      SSL_CONTAINER: ssl
     depends_on:
       - web
       - api
@@ -82,6 +83,9 @@ services:
       - certbot-data:/var/lib/letsencrypt
     networks:
       - net
+    ports:
+      - "8080:80"
+      - "8443:443"
 
 networks:
   net:
