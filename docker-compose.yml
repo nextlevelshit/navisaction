@@ -53,6 +53,21 @@ services:
     networks:
       - net
 
+#  web:
+#    container_name: web
+#    build: ./web-2
+#    ports:
+#      - "${WEB_PORT}:${WEB_PORT}"
+#    env_file:
+#      - .env
+#    environment:
+#      API_URL: ${API_URL}
+#      VITE_API_URL: ${API_URL}
+#    depends_on:
+#      - api
+#    networks:
+#      - net
+
   ssl:
     image: certbot/certbot
     container_name: ssl

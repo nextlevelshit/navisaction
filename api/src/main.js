@@ -8,7 +8,7 @@ const mime = require('mime'); // Install mime: npm install mime
 
 const app = express();
 const port = process.env.API_PORT || 3000;
-const host = "//" + process.env.APP_HOST || `//localhost:${port}`; // @todo wild
+const host = process.env.APP_HOST || `localhost:${port}`; // @todo wild
 
 // Allow CORS with custom options
 app.use(cors({
@@ -52,7 +52,9 @@ app.post('/api/upload', upload.array("files"), (req, res) => {
 
     const images = req.files.map(file => ({
         name: file.originalname,
-        url: `${host}/api/images/${file.filename}`
+        thumbnail: `https://${host}/api/images/${file.filename}`,
+        path: `/api/images/${file.filename}`,
+        original: `https://${host}/uploads/${file.path}`
     }));
 
     res.send({ success: true, message: 'Files uploaded successfully', files: images });
@@ -72,11 +74,12 @@ app.get('/api/images', (req, res) => {
                 return {
                     name: originalname,
                     timestamp,
-                    url: `${host}/api/images/${file}`
+                    thumbnail: `https://${host}/api/images/${file}`,
+                    path: `/api/images/${file}`,
+                    original: `https://${host}/uploads/${file}`
                 };
             })
-            .sort((a, b) => b.timestamp - a.timestamp)
-            .map(({ name, url }) => ({ name, url }));
+            .sort((a, b) => b.timestamp - a.timestamp);
 
         res.send({ success: true, images });
     });
