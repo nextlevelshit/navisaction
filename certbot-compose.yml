@@ -1,0 +1,19 @@
+version: "3.9"
+
+services:
+  ssl:
+    image: certbot/certbot
+    container_name: ssl
+    env_file:
+      - .env
+    environment:
+      CERT_HOST: ${CERT_HOST}
+      APP_HOST: ${APP_HOST}
+    command: certonly --standalone --http-01-port 80 --agree-tos --non-interactive --email domain@dailysh.it -d ${CERT_HOST} --deploy-hook "cat /etc/letsencrypt/live/${CERT_HOST}/fullchain.pem /etc/letsencrypt/live/${CERT_HOST}/privkey.pem > /etc/letsencrypt/fullchain.pem"
+    ports:
+      - "80:80"
+    volumes:
+      - certs:/etc/letsencrypt
+      - certbot-data:/var/lib/letsencrypt
+    networks:
+      - net
