@@ -14,6 +14,11 @@ services:
       - "80:80"
     volumes:
       - certs:/etc/letsencrypt
-      - certbot-data:/var/lib/letsencrypt
     networks:
       - net
+
+networks:
+  net:
+
+volumes:
+  certs:
