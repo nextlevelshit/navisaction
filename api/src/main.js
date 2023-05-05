@@ -17,7 +17,7 @@ app.use(cors({
     allowedHeaders: ['Content-Type'],
 }));
 
-app.use('uploads', express.static('uploads'));
+app.use('/uploads', express.static('uploads'));
 app.use(express.json());
 
 const uploadFolder = './uploads';
