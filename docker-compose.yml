@@ -77,9 +77,12 @@ services:
     env_file:
       - .env
     environment:
+      SSL_PORT: ${SSL_PORT}
       CERT_HOST: ${CERT_HOST}
       APP_HOST: ${APP_HOST}
-    command: certonly --standalone --agree-tos --non-interactive --email domain@dailysh.it -d ${CERT_HOST} --deploy-hook "cat /etc/letsencrypt/live/${CERT_HOST}/fullchain.pem /etc/letsencrypt/live/${CERT_HOST}/privkey.pem > /etc/letsencrypt/fullchain.pem"
+    command: certonly --standalone --http-01-port ${SSL_PORT} --agree-tos --non-interactive --email domain@dailysh.it -d ${CERT_HOST} --deploy-hook "cat /etc/letsencrypt/live/${CERT_HOST}/fullchain.pem /etc/letsencrypt/live/${CERT_HOST}/privkey.pem > /etc/letsencrypt/fullchain.pem"
+    ports:
+        - "${SSL_PORT}:${SSL_PORT}"
     volumes:
       - certs:/etc/letsencrypt
       - certbot-data:/var/lib/letsencrypt
