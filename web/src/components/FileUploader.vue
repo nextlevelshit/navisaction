@@ -18,7 +18,7 @@
     />
     <div class="relative w-full flex min-h-screen flex-col justify-center px-2 sm:px-6 py-2 sm:py-6">
       <div
-          class="columns-2 2xl:columns-4 xl:columns-3 gap-1 column-fill:balance box-border before:box-inherit after:box-inherit">
+          class="columns-3 2xl:columns-5 xl:columns-4 gap-1 column-fill:balance box-border before:box-inherit after:box-inherit">
         <div v-for="(image, index) in images" :key="index" class="break-inside-avoid overflow-hidden mb-1 bg-gray-100 rounded-lg shadow-lg">
             <a :href="image.original">
                 <img :src="image.thumbnail ?? image.url" :alt="image.name" :data-meta="JSON.stringify(image)"/>
