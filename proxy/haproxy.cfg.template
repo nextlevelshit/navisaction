@@ -15,8 +15,9 @@ defaults
 frontend http
     bind *:80
     acl host_app hdr(host) -i ${APP_HOST}
-    acl url_ssl path_beg -i /.well-known
+    acl url_ssl path_beg -i /.well-known/acme-challenge
     use_backend ssl_backend if host_app url_ssl
+    default_backend web_backend
 
 frontend https
     bind *:443 ssl crt /etc/ssl/fullchain.pem
