@@ -1,11 +1,13 @@
 <template>
   <div class="py-10 bg-gray-100 flex flex-col items-center justify-center">
     <div
-        class="text-7xl cursor-pointer active:scale-105 hover:scale-110 transition-transform"
+        class="text-7xl md:text-8xl cursor-pointer active:scale-105 hover:scale-110 transition-transform"
         :class="{ 'scale-110': isDragging }"
         @click="openFileBrowser"
+        @mouseenter="isHovering = true"
+        @mouseleave="isHovering = false"
     >
-      <span v-if="isDragging">😮</span>
+      <span v-if="isDragging || isHovering">😮</span>
       <span v-else>😗</span>
     </div>
     <div v-if="progress > 0 && progress < 100" class="font-bold">{{ progress }}%</div>
@@ -37,6 +39,7 @@ export default {
     return {
       progress: 0,
       isDragging: false,
+      isHovering: false,
       uploadedFiles: [],
       images: []
     };

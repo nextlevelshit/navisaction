@@ -4,9 +4,9 @@ services:
   pxy:
     build: ./proxy
     container_name: pxy
-    ports:
-      - "80:80"
-      - "443:443"
+    depends_on:
+      - web
+      - api
     env_file:
       - .env
     environment:
@@ -15,19 +15,17 @@ services:
       WEB_PORT: ${WEB_PORT}
       API_CONTAINER: api
       WEB_CONTAINER: web
-    depends_on:
-      - web
-      - api
     volumes:
       - certs:/etc/ssl:ro
     networks:
       - net
+    ports:
+      - "80:80"
+      - "443:443"
 
   api:
     container_name: api
     build: ./api
-    ports:
-      - "${API_PORT}:${API_PORT}"
     env_file:
       - .env
     environment:
@@ -37,20 +35,22 @@ services:
       - ./api/uploads:/app/uploads
     networks:
       - net
+    ports:
+      - "${API_PORT}:${API_PORT}"
 
   web:
     container_name: web
     build: ./web
-    ports:
-      - "${WEB_PORT}:${WEB_PORT}"
+    depends_on:
+      - api
     env_file:
       - .env
     environment:
       API_URL: ${API_URL}
-    depends_on:
-      - api
     networks:
       - net
+    ports:
+      - "${WEB_PORT}:${WEB_PORT}"
 
 #  web:
 #    container_name: web

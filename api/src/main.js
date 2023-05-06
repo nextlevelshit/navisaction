@@ -94,7 +94,7 @@ app.get('/api/images/:filename', async (req, res) => {
     }
 
     // Set default width and height for resizing
-    const width = parseInt(req.query.width) || 120;
+    const width = parseInt(req.query.width) || 420;
 
     const mimetype = mime.getType(filePath);
 

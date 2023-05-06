@@ -4,7 +4,8 @@ module.exports = {
 	theme: {
 		extend: {
 			fontSize: {
-				"7xl": "50vh"
+				"7xl": "60vw",
+				"8xl": "50vh",
 			}
 		},
 	},
