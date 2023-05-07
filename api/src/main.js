@@ -62,6 +62,9 @@ app.post('/api/upload', upload.array("files"), (req, res) => {
 });
 
 app.get('/api/images', (req, res) => {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+
     fs.readdir(uploadFolder, (err, files) => {
         if (err) {
             return res.status(500).send({ success: false, message: 'Failed to read directory' });
@@ -82,9 +85,14 @@ app.get('/api/images', (req, res) => {
             })
             .sort((a, b) => b.timestamp - a.timestamp);
 
-        res.send({ success: true, images });
+        const startIndex = (page - 1) * limit;
+        const endIndex = startIndex + limit;
+        const results = images.slice(startIndex, endIndex);
+
+        res.send({ success: true, images: results });
     });
 });
+
 
 app.get('/api/images/:filename', async (req, res) => {
     const filePath = path.join(uploadFolder, req.params.filename);

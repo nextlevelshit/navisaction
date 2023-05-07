@@ -33,13 +33,22 @@ class Api {
 		})
 	}
 
-	async allImages() {
+	async allImages(page = 1) {
+		const limit = process.env.IMAGES_PER_PAGE || 1000;
+		logger(`Fetching images - page: ${page} - limit: ${limit}`);
 		await this.bootstrap();
+		await this.withDebounce();
 		return await this.axiosInstance
-			.get("/images")
+			.get("/images", {
+				params: {
+					page,
+					limit
+				}
+			})
 			.then(parseResponseOrError)
 			.catch(parseResponseOrError);
 	}
+
 
 	async image(filename) {
 		await this.bootstrap();

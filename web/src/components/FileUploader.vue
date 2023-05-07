@@ -1,5 +1,5 @@
 <template>
-  <div class="py-10 bg-black text-white">
+  <div class="py-10 bg-black text-white overflow-y-auto fixed top-0 left-0 w-full h-full z-10" @scroll="onScroll" ref="wrapper">
     <div class="md:grid md:grid-cols-2 gap-4">
       <div class="text-xl p-10">
         <h1 class="mb-3"><strong class="text-2xl">PEERHOF Photowall ⛰️</strong></h1>
@@ -50,14 +50,14 @@
         @change="handleFileChange"
         multiple
     />
-    <div class="block relative w-full">
+    <div class="block relative w-full" >
 
       <div class="p-6 md:w-1/3" v-if="false">
         <label for="column-range" class="block mb-2 text-md font-medium">Bildergröße</label>
         <input id="column-range" type="range" min="180" max="420" v-model="columnWidth" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700">
       </div>
 
-      <MasonryWall :items="images" :column-width="columnWidth" :gap="8">
+      <MasonryWall :items="images" :column-width="columnWidth" :gap="8" :scroll-container="$refs.wrapper">
         <template #default="{ item, index }">
           <div :class="['fade-in break-inside-avoid overflow-hidden cursor-zoom-in rounded-sm hover:scale-95 transition-transform', {'loaded': item.loaded}]">
             <img :src="item.thumbnail ?? item.url" :alt="item.name" :data-meta="JSON.stringify(item)" @load="item.loaded = true" @click="handleImageClick(item)" class="min-w-full h-auto"/>
@@ -66,8 +66,9 @@
       </MasonryWall>
     </div>
   </div>
-  <div class="fixed p-12 top-0 left-0 w-full h-full bg-black bg-opacity-80 flex justify-center items-center overflow-y-auto z-50" v-if="selectedImage" @keyup.esc="handleClose()" tabindex="0" @click="handleClose()" >
-    <div class="absolute top-4 right-4 text-white text-3xl text-shadow cursor-zoom-out">×</div>
+  <div class="fixed p-12 top-0 left-0 w-full h-full bg-black bg-opacity-80 flex justify-center items-center overflow-y-auto z-50" v-if="selectedImage" @keyup.esc="handleClose()" tabindex="0">
+    <div class="absolute top-4 right-4 text-white text-3xl text-shadow cursor-zoom-out" @click="handleClose()">×</div>
+    <div class="absolute w-full h-full" @click="handleClose()"></div>
     <img :src="selectedImage.original" :alt="selectedImage.name" class="min-h-full w-auto"/>
   </div>
 </template>
@@ -88,7 +89,9 @@ export default {
       uploadedFiles: [],
       images: [],
       selectedImage: null,
-      columnWidth: 180
+      columnWidth: 180,
+      viewportWidth: 960,
+      reloadsPassed: 0
     };
   },
   components: { MasonryWall },
@@ -102,7 +105,10 @@ export default {
     async fetchImages() {
       try {
         const data = await api.allImages();
-        this.images = data.images;
+        this.images = [
+            ...this.images,
+            ...data.images
+        ];
       } catch (error) {
         console.error(error);
       }
@@ -156,6 +162,15 @@ export default {
     handleImageClick(item) {
       this.selectedImage = item;
       // history.replaceState({}, item.name, item.original);
+    },
+    handleEsc({key}) {
+      logger("Pressing", key);
+      "Escape" === key && this.handleClose();
+    },
+    onScroll ({ target: { scrollTop, clientHeight, scrollHeight }}) {
+      if (scrollTop + clientHeight >= scrollHeight) {
+        logger("Reached bottom");
+      }
     }
   },
   mounted() {
@@ -163,21 +178,27 @@ export default {
     document.addEventListener("dragover", this.handleDragOver);
     document.addEventListener("dragleave", this.handleDragLeave);
     document.addEventListener("drop", this.handleDrop);
+    document.addEventListener("keyup", this.handleEsc);
+    // document.body.style.overflowY = "auto";
+    this.viewportWidth = window.innerWidth;
     this.fetchImages();
-    document.body.style.overflowY = "auto";
   },
   beforeUnmount() {
     document.removeEventListener("dragenter", this.handleDragEnter);
     document.removeEventListener("dragover", this.handleDragOver);
     document.removeEventListener("dragleave", this.handleDragLeave);
     document.removeEventListener("drop", this.handleDrop);
+    document.addEventListener("keyup", this.handleEsc);
   },
   watch: {
     selectedImage(next, current) {
       if (next) {
-        document.body.style.overflowY = "hidden";
+        this.$refs.wrapper.style.overflowY = "hidden";
+        // document.body.style.overflowY = "hidden";
+        next.original = `${next.path}?size=${this.viewportWidth}`;
       } else {
-        document.body.style.overflowY = "auto";
+        // document.body.style.overflowY = "auto";
+        this.$refs.wrapper.style.overflowY = "auto";
       }
     },
     columnWidth(next, current) {
@@ -188,9 +209,13 @@ export default {
 </script>
 
 <style>
-html, body {
+html,
+body {
   margin: 0;
   padding: 0;
+}
+body {
+  overflow: hidden;
   text-align: justify;
   hyphens: auto;
   orphans: 2;
