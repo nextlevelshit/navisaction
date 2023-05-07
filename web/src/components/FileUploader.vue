@@ -2,7 +2,7 @@
   <div class="py-10 bg-black text-white">
     <div class="md:grid md:grid-cols-2 gap-4">
       <div class="text-xl p-10">
-        <h1><strong class="text-2xl">PEERHOF Photowall ⛰️</strong></h1>
+        <h1 class="mb-3"><strong class="text-2xl">PEERHOF Photowall ⛰️</strong></h1>
         <p>
           Meine Liebsten, zwischen dem 6. - 10. April 2023 durften wir alle gemeinsam den Peerhof im wunderschönen Navis bewohnen.
           Wir all teilen eine Menge Erinnerungen und möchten diese auch teilen.
@@ -10,7 +10,7 @@
         <p>
           Bitte füttert das Emoji um die Bilder und Videos hochzuladen.
           Gängige Formate wie PNG, JP(E)G, MP4 und GIF werden unterstützt.
-          Alles darüber hinaus kann mit mir besprochen werden: <a href="mailto:mail@dailysh.it?subject=Let's talk about Navis&body=Hi Micha,\n\r">mail@dailysh.it</a>
+          Alles darüber hinaus kann mit mir besprochen werden: <a class="underline underline-offset-1 font-bold" href="mailto:mail@dailysh.it?subject=Let's talk about Navis&body=Hi Micha, geile Seite übrigens ...">mail@dailysh.it</a>
         </p>
         <p>
           <h2 class="mt-3 mb-1 font-bold">Aktuelle Features:</h2>
@@ -51,7 +51,13 @@
         multiple
     />
     <div class="block relative w-full">
-      <MasonryWall :items="images" :column-width="180" :gap="8">
+
+      <div class="p-6 md:w-1/3" v-if="false">
+        <label for="column-range" class="block mb-2 text-md font-medium">Bildergröße</label>
+        <input id="column-range" type="range" min="180" max="420" v-model="columnWidth" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700">
+      </div>
+
+      <MasonryWall :items="images" :column-width="columnWidth" :gap="8">
         <template #default="{ item, index }">
           <div :class="['fade-in break-inside-avoid overflow-hidden cursor-zoom-in rounded-sm hover:scale-95 transition-transform', {'loaded': item.loaded}]">
             <img :src="item.thumbnail ?? item.url" :alt="item.name" :data-meta="JSON.stringify(item)" @load="item.loaded = true" @click="handleImageClick(item)"/>
@@ -81,7 +87,8 @@ export default {
       isHovering: false,
       uploadedFiles: [],
       images: [],
-      selectedImage: null
+      selectedImage: null,
+      columnWidth: 180
     };
   },
   components: { MasonryWall },
@@ -172,6 +179,9 @@ export default {
       } else {
         document.body.style.overflowY = "auto";
       }
+    },
+    columnWidth(next, current) {
+      logger(next, current);
     }
   }
 };
