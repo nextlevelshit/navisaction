@@ -13,8 +13,8 @@ ARG API_URL
 
 ENV NGINX_DEBUG="true" \
     NODE_ENV="production" \
-    API_URL="$API_URL" \
-    VUE_APP_API_URL="$API_URL"
+    API_URL="$API_URL"
+
 # Build the project
 RUN npm run build
 # New base image for nginx

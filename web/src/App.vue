@@ -1,9 +1,9 @@
 <template>
-    <nav class="container mx-auto my-5">
-        <div class="flex flex-col md:flex-row p-6 gap-4">
-            <strong>NAVIS Peerhof 2023</strong>
-        </div>
-    </nav>
+<!--    <nav class="container mx-auto my-5 sticky top-0">-->
+<!--        <div class="flex flex-col md:flex-row p-4 gap-4">-->
+<!--            <strong class="text-2xl">⛰️ PEERHOF 2023</strong>-->
+<!--        </div>-->
+<!--    </nav>-->
     <FileUploader/>
 </template>
 
@@ -11,13 +11,6 @@
 import FileUploader from "@/components/FileUploader.vue";
 
 export default {
-	data() {
-	},
-	computed: {
-	},
-	watch: {
-	},
-	methods: {},
   components: {
     FileUploader,
   }

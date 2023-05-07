@@ -29,6 +29,7 @@ const storage = multer.diskStorage({
         cb(null, uploadFolder);
     },
     filename: (req, file, cb) => {
+        console.table(file);
         cb(null, Date.now() + '-' + file.originalname.toLowerCase());
     },
 });
@@ -52,9 +53,9 @@ app.post('/api/upload', upload.array("files"), (req, res) => {
 
     const images = req.files.map(file => ({
         name: file.originalname,
-        thumbnail: `https://${host}/api/images/${file.filename}`,
+        thumbnail: `/api/images/${file.filename}`,
         path: `/api/images/${file.filename}`,
-        original: `https://${host}/uploads/${file.path}`
+        original: `/uploads/${file.path}`
     }));
 
     res.send({ success: true, message: 'Files uploaded successfully', files: images });
@@ -74,9 +75,9 @@ app.get('/api/images', (req, res) => {
                 return {
                     name: originalname,
                     timestamp,
-                    thumbnail: `https://${host}/api/images/${file}`,
+                    thumbnail: `/api/images/${file}`,
                     path: `/api/images/${file}`,
-                    original: `https://${host}/uploads/${file}`
+                    original: `/uploads/${file}`
                 };
             })
             .sort((a, b) => b.timestamp - a.timestamp);

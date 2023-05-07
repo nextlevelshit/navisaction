@@ -1,14 +1,46 @@
 <template>
-  <div class="py-10 bg-gray-100 flex flex-col items-center justify-center">
-    <div
-        class="text-7xl md:text-8xl cursor-pointer active:scale-105 hover:scale-110 transition-transform"
-        :class="{ 'scale-110': isDragging }"
-        @click="openFileBrowser"
-        @mouseenter="isHovering = true"
-        @mouseleave="isHovering = false"
-    >
-      <span v-if="isDragging || isHovering">😮</span>
-      <span v-else>😗</span>
+  <div class="py-10 bg-black text-white">
+    <div class="md:grid md:grid-cols-2 gap-4">
+      <div class="text-xl p-10">
+        <h1><strong class="text-2xl">PEERHOF Photowall ⛰️</strong></h1>
+        <p>
+          Meine Liebsten, zwischen dem 6. - 10. April 2023 durften wir alle gemeinsam den Peerhof im wunderschönen Navis bewohnen.
+          Wir all teilen eine Menge Erinnerungen und möchten diese auch teilen.
+        </p>
+        <p>
+          Bitte füttert das Emoji um die Bilder und Videos hochzuladen.
+          Gängige Formate wie PNG, JP(E)G, MP4 und GIF werden unterstützt.
+          Alles darüber hinaus kann mit mir besprochen werden: <a href="mailto:mail@dailysh.it?subject=Let's talk about Navis&body=Hi Micha,\n\r">mail@dailysh.it</a>
+        </p>
+        <p>
+          <h2 class="mt-3 mb-1 font-bold">Aktuelle Features:</h2>
+          <ul class="list-disc ml-5 mt-2 mb-4">
+            <li>Masonry Fotowand Effekt für Desktop und Mobile</li>
+            <li>Vollbildansicht beim Anklicken der Bilder</li>
+            <li>Schließen des Vollbildes durch erneutes Antippen des Bildes oder des Kreuzes</li>
+          </ul>
+        </p>
+        <p>
+          <h2 class="mt-3 mb-1 font-bold">Geplante Features:</h2>
+          <ul class="list-disc ml-5 mt-2 mb-4">
+            <li>Bildergalerie zum Durchwischen</li>
+            <li>Dia Show</li>
+            <li>Duplikate entfernen</li>
+            <li>Meta-Daten auslesen für bessere Sortierung</li>
+            <li>Non-JS Version / SSR</li>
+          </ul>
+        </p>
+      </div>
+      <div
+          class="text-7xl md:text-8xl cursor-pointer active:scale-95 transition-transform flex flex-col items-center justify-center"
+          :class="{ 'scale-110': isDragging }"
+          @click="openFileBrowser"
+          @mouseenter="isHovering = true"
+          @mouseleave="isHovering = false"
+      >
+        <span v-if="isDragging || isHovering">😮</span>
+        <span v-else>😗</span>
+      </div>
     </div>
     <div v-if="progress > 0 && progress < 100" class="font-bold">{{ progress }}%</div>
     <input
@@ -18,21 +50,28 @@
         @change="handleFileChange"
         multiple
     />
-    <div class="relative w-full flex min-h-screen flex-col justify-center px-2 sm:px-6 py-2 sm:py-6">
-      <div
-          class="columns-3 2xl:columns-5 xl:columns-4 gap-1 column-fill:balance box-border before:box-inherit after:box-inherit">
-        <div v-for="(image, index) in images" :key="index" class="break-inside-avoid overflow-hidden mb-1 bg-gray-100 rounded-lg shadow-lg">
-            <a :href="image.original">
-                <img :src="image.thumbnail ?? image.url" :alt="image.name" :data-meta="JSON.stringify(image)"/>
-            </a>
-        </div>
-      </div>
+    <div class="block relative w-full">
+      <MasonryWall :items="images" :column-width="180" :gap="8">
+        <template #default="{ item, index }">
+          <div :class="['fade-in break-inside-avoid overflow-hidden cursor-zoom-in rounded-sm hover:scale-95 transition-transform', {'loaded': item.loaded}]">
+            <img :src="item.thumbnail ?? item.url" :alt="item.name" :data-meta="JSON.stringify(item)" @load="item.loaded = true" @click="handleImageClick(item)"/>
+          </div>
+        </template>
+      </MasonryWall>
     </div>
+  </div>
+  <div class="fixed p-12 top-0 left-0 w-full h-full bg-black bg-opacity-80 flex justify-center items-center overflow-y-auto z-50" v-if="selectedImage">
+    <div class="absolute top-4 right-4 text-white text-3xl text-shadow cursor-zoom-out" @click="handleClose()">×</div>
+    <img :src="selectedImage.original" :alt="selectedImage.name" @click="handleClose()"/>
   </div>
 </template>
 
 <script>
 import api from "@/services/Api";
+import MasonryWall from "@yeger/vue-masonry-wall";
+import debug from "debug";
+
+const logger = debug("app:i:file-uploader");
 
 export default {
   data() {
@@ -41,9 +80,11 @@ export default {
       isDragging: false,
       isHovering: false,
       uploadedFiles: [],
-      images: []
+      images: [],
+      selectedImage: null
     };
   },
+  components: { MasonryWall },
   methods: {
     openFileBrowser() {
       this.$refs.fileInput.click();
@@ -102,6 +143,13 @@ export default {
       this.uploadFiles(Array.from(event.dataTransfer.files));
       this.$refs.fileInput.value = null;
     },
+    handleClose() {
+      this.selectedImage = null;
+    },
+    handleImageClick(item) {
+      this.selectedImage = item;
+      // history.replaceState({}, item.name, item.original);
+    }
   },
   mounted() {
     document.addEventListener("dragenter", this.handleDragEnter);
@@ -109,6 +157,7 @@ export default {
     document.addEventListener("dragleave", this.handleDragLeave);
     document.addEventListener("drop", this.handleDrop);
     this.fetchImages();
+    document.body.style.overflowY = "auto";
   },
   beforeUnmount() {
     document.removeEventListener("dragenter", this.handleDragEnter);
@@ -116,6 +165,15 @@ export default {
     document.removeEventListener("dragleave", this.handleDragLeave);
     document.removeEventListener("drop", this.handleDrop);
   },
+  watch: {
+    selectedImage(next, current) {
+      if (next) {
+        document.body.style.overflowY = "hidden";
+      } else {
+        document.body.style.overflowY = "auto";
+      }
+    }
+  }
 };
 </script>
 
@@ -123,6 +181,14 @@ export default {
 html, body {
   margin: 0;
   padding: 0;
+  text-align: justify;
+  hyphens: auto;
+  orphans: 2;
+  widows: 2;
+
+  @supports (text-wrap: balance) {
+    text-wrap: balance;
+  }
 }
 
 input[type="file"] {
@@ -150,4 +216,14 @@ img {
   min-width: 100%;
   height: auto;
 }
+
+.fade-in {
+  transition: opacity 0.3s ease-in-out;
+  opacity: 0;
+}
+
+.fade-in.loaded {
+  opacity: 1;
+}
+
 </style>

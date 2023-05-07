@@ -2,11 +2,10 @@ import axios, {AxiosError} from "axios";
 import debug from "debug";
 
 const logger = debug("web:v:api");
-const baseURL = process.env.VUE_APP_API_URL || "/api";
+const baseURL = process.env.API_RELATIVE_PATH || "/api";
 
-logger(process.env.VUE_APP_API_URL);
-logger("API_URL", process.env.API_URL);
 logger("NODE_ENV", process.env.NODE_ENV);
+logger("API_RELATIVE_PATH", process.env.API_RELATIVE_PATH);
 logger("baseUrl", baseURL);
 
 function parseResponseOrError(res) {
