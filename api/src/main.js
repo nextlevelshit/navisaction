@@ -55,7 +55,7 @@ app.post('/api/upload', upload.array("files"), (req, res) => {
         name: file.originalname,
         thumbnail: `/api/images/${file.filename}`,
         path: `/api/images/${file.filename}`,
-        original: `/uploads/${file.path}`
+        original: `/api/images/${file}?size=1280`
     }));
 
     res.send({ success: true, message: 'Files uploaded successfully', files: images });
@@ -77,7 +77,7 @@ app.get('/api/images', (req, res) => {
                     timestamp,
                     thumbnail: `/api/images/${file}`,
                     path: `/api/images/${file}`,
-                    original: `/uploads/${file}`
+                    original: `/api/images/${file}?size=1280`
                 };
             })
             .sort((a, b) => b.timestamp - a.timestamp);
@@ -85,7 +85,6 @@ app.get('/api/images', (req, res) => {
         res.send({ success: true, images });
     });
 });
-
 
 app.get('/api/images/:filename', async (req, res) => {
     const filePath = path.join(uploadFolder, req.params.filename);

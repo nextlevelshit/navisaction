@@ -60,15 +60,15 @@
       <MasonryWall :items="images" :column-width="columnWidth" :gap="8">
         <template #default="{ item, index }">
           <div :class="['fade-in break-inside-avoid overflow-hidden cursor-zoom-in rounded-sm hover:scale-95 transition-transform', {'loaded': item.loaded}]">
-            <img :src="item.thumbnail ?? item.url" :alt="item.name" :data-meta="JSON.stringify(item)" @load="item.loaded = true" @click="handleImageClick(item)"/>
+            <img :src="item.thumbnail ?? item.url" :alt="item.name" :data-meta="JSON.stringify(item)" @load="item.loaded = true" @click="handleImageClick(item)" class="min-w-full h-auto"/>
           </div>
         </template>
       </MasonryWall>
     </div>
   </div>
-  <div class="fixed p-12 top-0 left-0 w-full h-full bg-black bg-opacity-80 flex justify-center items-center overflow-y-auto z-50" v-if="selectedImage">
-    <div class="absolute top-4 right-4 text-white text-3xl text-shadow cursor-zoom-out" @click="handleClose()">×</div>
-    <img :src="selectedImage.original" :alt="selectedImage.name" @click="handleClose()"/>
+  <div class="fixed p-12 top-0 left-0 w-full h-full bg-black bg-opacity-80 flex justify-center items-center overflow-y-auto z-50" v-if="selectedImage" @keyup.esc="handleClose()" tabindex="0" @click="handleClose()" >
+    <div class="absolute top-4 right-4 text-white text-3xl text-shadow cursor-zoom-out">×</div>
+    <img :src="selectedImage.original" :alt="selectedImage.name" class="min-h-full w-auto"/>
   </div>
 </template>
 
@@ -220,11 +220,6 @@ button[disabled] {
   opacity: 0.5;
   pointer-events: none;
   cursor: not-allowed;
-}
-
-img {
-  min-width: 100%;
-  height: auto;
 }
 
 .fade-in {
