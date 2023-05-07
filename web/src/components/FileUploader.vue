@@ -60,7 +60,7 @@
       <MasonryWall :items="images" :column-width="columnWidth" :gap="8" :scroll-container="$refs.wrapper">
         <template #default="{ item, index }">
           <div :class="['fade-in break-inside-avoid overflow-hidden cursor-zoom-in rounded-sm hover:scale-95 transition-transform', {'loaded': item.loaded}]">
-            <img :src="item.thumbnail ?? item.url" :alt="item.name" :data-meta="JSON.stringify(item)" @load="item.loaded = true" @click="handleImageClick(item)" class="min-w-full h-auto"/>
+            <img :src="item.thumbnail ?? item.url" :alt="item.name" :data-meta="JSON.stringify(item)" @load="item.loaded = true" @click="handleImageClick(index)" class="min-w-full h-auto"/>
           </div>
         </template>
       </MasonryWall>
@@ -68,8 +68,8 @@
   </div>
   <div class="fixed p-12 top-0 left-0 w-full h-full bg-black bg-opacity-80 flex justify-center items-center overflow-y-auto z-50" v-if="selectedImage" @keyup.esc="handleClose()" tabindex="0">
     <div class="absolute top-4 right-4 text-white text-3xl text-shadow cursor-zoom-out" @click="handleClose()">×</div>
-    <div class="absolute w-full h-full" @click="handleClose()"></div>
-    <img :src="selectedImage.original" :alt="selectedImage.name" class="min-h-full w-auto"/>
+    <div class="absolute w-full h-full z-40" @click="handleClose()"></div>
+    <img :src="selectedImage.original" :alt="selectedImage.name" class="min-h-full w-auto z-50" @click="handleImageClick(selectedIndex + 1)"/>
   </div>
 </template>
 
@@ -89,9 +89,9 @@ export default {
       uploadedFiles: [],
       images: [],
       selectedImage: null,
+      selectedIndex: null,
       columnWidth: 180,
-      viewportWidth: 960,
-      reloadsPassed: 0
+      viewportWidth: 960
     };
   },
   components: { MasonryWall },
@@ -157,15 +157,31 @@ export default {
       this.$refs.fileInput.value = null;
     },
     handleClose() {
+      logger("Closing fullscreen");
       this.selectedImage = null;
     },
-    handleImageClick(item) {
-      this.selectedImage = item;
+    handleImageClick(index) {
+      this.selectedIndex = index;
+      this.selectedImage = this.images[index];
+      logger("Clicked at image", index, this.selectedImage);
       // history.replaceState({}, item.name, item.original);
     },
     handleEsc({key}) {
-      logger("Pressing", key);
-      "Escape" === key && this.handleClose();
+      if(!this.selectedImage) return;
+
+      switch (key) {
+        case "Escape":
+          this.handleClose();
+          break;
+        case "ArrowLeft":
+          this.handleImageClick(this.selectedIndex - 1);
+          break;
+        case "ArrowRight":
+          this.handleImageClick(this.selectedIndex + 1);
+          break;
+        default:
+          logger("Pressed", key);
+      }
     },
     onScroll ({ target: { scrollTop, clientHeight, scrollHeight }}) {
       if (scrollTop + clientHeight >= scrollHeight) {
