@@ -2,7 +2,7 @@
   <div class="py-10 bg-black text-white overflow-y-auto fixed top-0 left-0 w-full h-full z-10" @scroll="onScroll" ref="wrapper">
     <div class="md:grid md:grid-cols-2 gap-4">
       <div class="text-xl p-10">
-        <h1 class="mb-3"><strong class="text-2xl">PEERHOF Photowall ⛰️</strong></h1>
+        <h1 class="mb-3"><strong class="text-2xl">PEERHOF Fotoalbum ⛰️</strong></h1>
         <p>
           Meine Liebsten, zwischen dem 6. - 10. April 2023 durften wir alle gemeinsam den Peerhof im wunderschönen Navis bewohnen.
           Wir all teilen eine Menge Erinnerungen und möchten diese auch teilen.
