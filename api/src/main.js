@@ -22,7 +22,7 @@ app.use(express.json());
 
 const uploadFolder = './uploads';
 
-const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif', 'video/mp4', 'video/webm'];
+const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif'];
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {

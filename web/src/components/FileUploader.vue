@@ -9,7 +9,7 @@
         </p>
         <p>
           Bitte füttert das Emoji um die Bilder und Videos hochzuladen.
-          Gängige Formate wie PNG, JP(E)G, MP4 und GIF werden unterstützt.
+          Gängige Formate wie PNG, JP(E)G und GIF werden unterstützt.
           Alles darüber hinaus kann mit mir besprochen werden: <a class="underline underline-offset-1 font-bold" href="mailto:mail@dailysh.it?subject=Let's talk about Navis&body=Hi Micha, geile Seite übrigens ...">mail@dailysh.it</a>
         </p>
         <p>
