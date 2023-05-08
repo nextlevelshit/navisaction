@@ -211,7 +211,7 @@ export default {
       if (next) {
         this.$refs.wrapper.style.overflowY = "hidden";
         // document.body.style.overflowY = "hidden";
-        next.original = `${next.path}?size=${this.viewportWidth}`;
+        next.original = `${next.path}?width=${this.viewportWidth}`;
       } else {
         // document.body.style.overflowY = "auto";
         this.$refs.wrapper.style.overflowY = "auto";

@@ -55,7 +55,7 @@ app.post('/api/upload', upload.array("files"), (req, res) => {
         name: file.originalname,
         thumbnail: `/api/images/${file.filename}`,
         path: `/api/images/${file.filename}`,
-        original: `/api/images/${file}?size=1280`
+            original: `/api/images/${file}?width=1280`
     }));
 
     res.send({ success: true, message: 'Files uploaded successfully', files: images });
@@ -80,7 +80,7 @@ app.get('/api/images', (req, res) => {
                     timestamp,
                     thumbnail: `/api/images/${file}`,
                     path: `/api/images/${file}`,
-                    original: `/api/images/${file}?size=1280`
+                    original: `/api/images/${file}?width=1280`
                 };
             })
             .sort((a, b) => b.timestamp - a.timestamp);

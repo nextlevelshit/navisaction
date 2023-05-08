@@ -49,7 +49,6 @@ class Api {
 			.catch(parseResponseOrError);
 	}
 
-
 	async image(filename) {
 		await this.bootstrap();
 		return await this.axiosInstance
