@@ -41,5 +41,6 @@ jobs:
         ssh -o StrictHostKeyChecking=no -p ${{ secrets.SERVER_PORT }} ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'EOF'
           cd code/navisaction
           git pull
+          docker compose down
           docker compose up --build -d
         EOF
