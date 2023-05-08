@@ -69,7 +69,7 @@
   <div class="fixed p-12 top-0 left-0 w-full h-full bg-black bg-opacity-80 flex justify-center items-center overflow-y-auto z-50" v-if="selectedImage" @keyup.esc="handleClose()" tabindex="0">
     <div class="absolute top-4 right-4 text-white text-3xl text-shadow cursor-zoom-out" @click="handleClose()">×</div>
     <div class="absolute w-full h-full z-40" @click="handleClose()"></div>
-    <img :src="selectedImage.original" :alt="selectedImage.name" class="min-h-full w-auto z-50" @click="handleImageClick(selectedIndex + 1)"/>
+    <img :src="selectedImage.original" :alt="selectedImage.name" class="w-auto z-50 m-12" @click="handleImageClick(selectedIndex + 1)"/>
   </div>
 </template>
 
