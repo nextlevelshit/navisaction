@@ -66,10 +66,13 @@
       </MasonryWall>
     </div>
   </div>
-  <div class="fixed p-12 top-0 left-0 w-full h-full bg-black bg-opacity-80 flex justify-center items-center overflow-y-auto z-50" v-if="selectedImage" @keyup.esc="handleClose()" tabindex="0">
-    <div class="absolute top-4 right-4 text-white text-3xl text-shadow cursor-zoom-out" @click="handleClose()">×</div>
-    <div class="absolute w-full h-full z-40" @click="handleClose()"></div>
-    <img :src="selectedImage.original" :alt="selectedImage.name" class="w-auto z-50 m-12" @click="handleImageClick(selectedIndex + 1)"/>
+  <div class="fixed top-0 left-0 w-full h-full bg-black bg-opacity-80 overflow-y-auto overflow-x-hidden z-50" v-if="selectedImage" @keyup.esc="handleClose()" tabindex="0">
+    <div class="relative p-12 w-full h-full flex justify-center items-center flex-col py-10">
+      <div class="absolute top-4 right-4 text-white text-3xl text-szoom-outhadow cursor-zoom-out z-40" @click="handleClose()">×</div>
+      <div class="absolute w-full h-full z-30" @click="handleClose()"></div>
+      <img :src="selectedImage.adaptive" :alt="selectedImage.name" class="w-auto z-50" @click="handleImageClick(selectedIndex + 1)"/>
+      <button class="rounded-sm border-2 border-b-amber-50 my-10 text-amber-50 py-6 px-12 z-50" @click="changeLocation(selectedImage.original)">Original herunterladen</button>
+    </div>
   </div>
 </template>
 
@@ -90,7 +93,7 @@ export default {
       images: [],
       selectedImage: null,
       selectedIndex: null,
-      columnWidth: 180,
+      columnWidth: 380,
       viewportWidth: 960
     };
   },
@@ -187,6 +190,10 @@ export default {
       if (scrollTop + clientHeight >= scrollHeight) {
         logger("Reached bottom");
       }
+    },
+    changeLocation(url) {
+      // history.pushState({}, 'Original herunterladen', url);
+      window.location.href = url;
     }
   },
   mounted() {
@@ -211,7 +218,7 @@ export default {
       if (next) {
         this.$refs.wrapper.style.overflowY = "hidden";
         // document.body.style.overflowY = "hidden";
-        next.original = `${next.path}?width=${this.viewportWidth}`;
+        next.adaptive = `${next.path}?width=${this.viewportWidth}`;
       } else {
         // document.body.style.overflowY = "auto";
         this.$refs.wrapper.style.overflowY = "auto";
@@ -236,10 +243,7 @@ body {
   hyphens: auto;
   orphans: 2;
   widows: 2;
-
-  @supports (text-wrap: balance) {
-    text-wrap: balance;
-  }
+  text-wrap: balance;
 }
 
 input[type="file"] {
