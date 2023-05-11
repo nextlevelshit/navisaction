@@ -1,23 +1,27 @@
 <template>
   <div class="py-10 bg-black text-white overflow-y-auto fixed top-0 left-0 w-full h-full z-10" @scroll="onScroll" ref="wrapper">
     <div class="md:grid md:grid-cols-2 gap-4">
-      <div class="text-xl p-10">
+      <div class="text-xl p-10 md:w-3/4">
         <h1 class="mb-3"><strong class="text-2xl">PEERHOF Fotoalbum ⛰️</strong></h1>
         <p>
-          Meine Liebsten, zwischen dem 6. - 10. April 2023 durften wir alle gemeinsam den Peerhof im wunderschönen Navis bewohnen.
+          Meine Liebsten, zwischen dem
+          <nobr>6. - 10. April 2023</nobr>
+          durften wir alle gemeinsam den Peerhof im wunderschönen Navis bewohnen.<br><br>
           Wir all teilen eine Menge Erinnerungen und möchten diese auch teilen.
         </p>
         <p>
           Bitte füttert das Emoji um die Bilder und Videos hochzuladen.
           Gängige Formate wie PNG, JP(E)G und GIF werden unterstützt.
-          Alles darüber hinaus kann mit mir besprochen werden: <a class="underline underline-offset-1 font-bold" href="mailto:mail@dailysh.it?subject=Let's talk about Navis&body=Hi Micha, geile Seite übrigens ...">mail@dailysh.it</a>
+          Alles darüber hinaus kann mit mir besprochen werden: <a class="underline underline-offset-1 font-bold"
+                                                                  href="mailto:mail@dailysh.it?subject=Let's talk about Navis&body=Hi Micha, geile Seite übrigens ...">mail@dailysh.it</a>
         </p>
         <p>
           <h2 class="mt-3 mb-1 font-bold">Aktuelle Features:</h2>
           <ul class="list-disc ml-5 mt-2 mb-4">
-            <li>Masonry Fotowand Effekt für Desktop und Mobile</li>
+            <li>"Masonry" Fotowand Effekt für Desktop und Mobile</li>
             <li>Vollbildansicht beim Anklicken der Bilder</li>
-            <li>Schließen des Vollbildes durch erneutes Antippen des Bildes oder des Kreuzes</li>
+            <li>In Vollbildansicht: Tastatursteuerung ( <kbd>←</kbd>, <kbd>→</kbd> und <kbd>Esc</kbd>)</li>
+            <li>In Vollbildansicht: Originalfoto Download Button</li>
           </ul>
         </p>
         <p>
@@ -40,6 +44,10 @@
       >
         <span v-if="isDragging || isHovering">😮</span>
         <span v-else>😗</span>
+        <div class="p-8 text-5xl text-center">
+          <span v-if="isDragging || isHovering">Ahhhhhhh!</span>
+          <span v-else>Bitte, hier füttern!</span>
+        </div>
       </div>
     </div>
     <div v-if="progress > 0 && progress < 100" class="font-bold">{{ progress }}%</div>
@@ -68,9 +76,12 @@
   </div>
   <div class="fixed top-0 left-0 w-full h-full bg-black bg-opacity-80 overflow-y-auto overflow-x-hidden z-50" v-if="selectedImage" @keyup.esc="handleClose()" tabindex="0">
     <div class="relative p-3 md:p-12 w-full h-full flex justify-center items-center flex-col">
-      <div class="absolute top-4 right-4 text-white text-3xl text-szoom-outhadow cursor-zoom-out z-40" @click="handleClose()">×</div>
+      <div class="absolute top-4 right-4 text-white text-3xl text-szoom-outhadow cursor-pointer z-40"
+           @click="handleClose()">×
+      </div>
       <div class="absolute w-full h-full z-30" @click="handleClose()"></div>
-      <img :src="selectedImage.adaptive" :alt="selectedImage.name" class="my-3 md:m-12 w-auto z-50" @click="handleImageClick(selectedIndex + 1)"/>
+      <img :alt="selectedImage.name" :src="selectedImage.adaptive" class="my-3 md:m-12 w-auto z-50 cursor-e-resize"
+           @click="handleImageClick(selectedIndex + 1)" />
       <button class="rounded-sm border-2 border-b-amber-50 my-10 text-amber-50 py-2 md:py-6 px-4 md:px-12 z-50" @click="changeLocation(selectedImage.original)">Original herunterladen</button>
     </div>
   </div>

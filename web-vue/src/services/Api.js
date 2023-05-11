@@ -1,4 +1,4 @@
-import axios, {AxiosError} from "axios";
+import axios, { AxiosError } from "axios";
 import debug from "debug";
 
 const logger = debug("web:v:api");
