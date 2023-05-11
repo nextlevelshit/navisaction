@@ -7,17 +7,18 @@
           Meine Liebsten, zwischen dem
           <nobr>6. - 10. April 2023</nobr>
           durften wir alle gemeinsam den Peerhof im wunderschönen Navis bewohnen.<br><br>
-          Wir all teilen eine Menge Erinnerungen und möchten diese auch teilen.
+          Wir alle teilen eine Menge Erinnerungen und möchten diese auch lange bewahren.
         </p>
         <p>
-          Bitte füttert das Emoji um die Bilder und Videos hochzuladen.
-          Gängige Formate wie PNG, JP(E)G und GIF werden unterstützt.
+          Bitte füttert das Emoji mit euren Bildern (und bald auch Videos)!
+          Gängige Formate wie PNG, JPG und GIF werden unterstützt.
           Alles darüber hinaus kann mit mir besprochen werden: <a class="underline underline-offset-1 font-bold"
                                                                   href="mailto:mail@dailysh.it?subject=Let's talk about Navis&body=Hi Micha, geile Seite übrigens ...">mail@dailysh.it</a>
         </p>
         <p>
           <h2 class="mt-3 mb-1 font-bold">Aktuelle Features:</h2>
           <ul class="list-disc ml-5 mt-2 mb-4">
+            <li>File Upload (mehrere Dateien, max. nicht bekannt)</li>
             <li>"Masonry" Fotowand Effekt für Desktop und Mobile</li>
             <li>Vollbildansicht beim Anklicken der Bilder</li>
             <li>In Vollbildansicht: Tastatursteuerung ( <kbd>←</kbd>, <kbd>→</kbd> und <kbd>Esc</kbd>)</li>

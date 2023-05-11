@@ -11,9 +11,20 @@
 import FileUploader from "@/components/FileUploader.vue";
 
 export default {
-  components: {
-    FileUploader,
-  }
+    name: "Navisaction",
+    metaInfo: {
+        title: "Navis PEERHOF 2023 ⛰️",
+        meta: [
+            {
+                property: "og:title",
+                content: "Navis PEERHOF 2023 ⛰️",
+                vmid: "og:title"
+            }
+        ]
+    },
+    components: {
+        FileUploader
+    }
 }
 </script>
 

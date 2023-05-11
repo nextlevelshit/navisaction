@@ -13,7 +13,7 @@ jobs:
     environment: netcup
 
     steps:
-    - name: Checkout repository
+      - name: Checkout repository
       uses: actions/checkout@v3.5.2
 
     - name: Setup Node.js
@@ -21,9 +21,9 @@ jobs:
       with:
         node-version: 18
 
-    - name: Install dependencies and build /web
+    - name: Install dependencies and build /web-vue
       run: |
-        cd web
+        cd web-vue
         npm i --no-audit --no-fund --progress=false --no-warnings --log-level=error
 
     - name: Install dependencies in /api
