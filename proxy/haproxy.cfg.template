@@ -15,7 +15,7 @@ defaults
 frontend http
     bind *:80
     acl host_app hdr(host) -i ${APP_HOST}
-    default_backend web_backend
+    redirect scheme https code 301 if !{ ssl_fc } host_app
 
 frontend https
     bind *:443 ssl crt /etc/ssl/fullchain.pem
