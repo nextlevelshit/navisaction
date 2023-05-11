@@ -46,12 +46,13 @@
         <span v-if="isDragging || isHovering">😮</span>
         <span v-else>😗</span>
         <div class="p-8 text-5xl text-center">
-          <span v-if="isDragging || isHovering">Ahhhhhhh!</span>
+          <span v-if="isDragging || isHovering">Ahhhhhhh! <strong v-if="progress > 0 && progress < 100"
+                                                                  class="font-bold">{{ progress }}%</strong></span>
           <span v-else>Bitte, hier füttern!</span>
         </div>
       </div>
     </div>
-    <div v-if="progress > 0 && progress < 100" class="font-bold">{{ progress }}%</div>
+
     <input
         type="file"
         ref="fileInput"
