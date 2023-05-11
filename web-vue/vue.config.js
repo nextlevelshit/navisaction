@@ -5,6 +5,12 @@ module.exports = defineConfig({
 	pwa: {
 		name: "PEERHOF Fotoalbum ⛰️"
 	},
+	chainWebpack: config => {
+		config.plugin("html").tap(args => {
+			args[0].title = "PEERHOF Fotoalbum ⛰️";
+			return args;
+		});
+	},
 	devServer: {
 		proxy: {
 			"^/(api|uploads)": {
