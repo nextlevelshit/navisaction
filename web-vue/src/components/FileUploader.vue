@@ -38,13 +38,16 @@
       </div>
       <div
           class="text-7xl md:text-8xl cursor-pointer active:scale-95 transition-transform flex flex-col items-center justify-center"
-          :class="{ 'scale-110': isDragging }"
-          @click="openFileBrowser"
-          @mouseenter="isHovering = true"
-          @mouseleave="isHovering = false"
+
       >
-        <span v-if="isDragging || isHovering">😮</span>
-        <span v-else>😗</span>
+        <div :class="{ 'scale-110': isDragging }"
+             class="inline"
+             @click="openFileBrowser"
+             @mouseenter="isHovering = true"
+             @mouseleave="isHovering = false">
+          <span v-if="isDragging || isHovering">😮</span>
+          <span v-else>😗</span>
+        </div>
         <div class="p-8 text-5xl text-center">
           <span v-if="isDragging || isHovering">Ahhhhhhh! <strong v-if="progress > 0 && progress < 100"
                                                                   class="font-bold">{{ progress }}%</strong></span>
@@ -69,8 +72,11 @@
 
       <MasonryWall :items="images" :column-width="columnWidth" :gap="8" :scroll-container="$refs.wrapper">
         <template #default="{ item, index }">
-          <div :class="['fade-in break-inside-avoid overflow-hidden cursor-zoom-in rounded-sm hover:scale-95 transition-transform', {'loaded': item.loaded}]">
-            <img :src="item.thumbnail ?? item.url" :alt="item.name" :data-meta="JSON.stringify(item)" @load="item.loaded = true" @click="handleImageClick(index)" class="min-w-full h-auto"/>
+          <div
+              :class="{'loaded': item.loaded}"
+              class="fade-in break-inside-avoid overflow-hidden cursor-zoom-in rounded-sm hover:scale-95 transition-transform">
+            <img :alt="item.name" :data-meta="JSON.stringify(item)" :src="item.thumbnail ?? item.url"
+                 class="min-w-full h-auto" @click="handleImageClick(index)" @load="item.loaded = true" />
           </div>
         </template>
       </MasonryWall>
