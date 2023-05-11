@@ -239,7 +239,6 @@ body {
 }
 body {
   overflow: hidden;
-  text-align: justify;
   hyphens: auto;
   orphans: 2;
   widows: 2;
