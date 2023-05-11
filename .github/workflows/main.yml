@@ -14,33 +14,33 @@ jobs:
 
     steps:
       - name: Checkout repository
-      uses: actions/checkout@v3.5.2
+        uses: actions/checkout@v3.5.2
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v2.5.2
-      with:
-        node-version: 18
+      - name: Setup Node.js
+        uses: actions/setup-node@v2.5.2
+        with:
+          node-version: 18
 
-    - name: Install dependencies and build /web-vue
-      run: |
-        cd web-vue
-        npm i --no-audit --no-fund --progress=false --no-warnings --log-level=error
+      - name: Install dependencies and build /web-vue
+        run: |
+          cd web-vue
+          npm i --no-audit --no-fund --progress=false --no-warnings --log-level=error
 
-    - name: Install dependencies in /api
-      run: |
-        cd api
-        npm i --no-audit --no-fund --progress=false --no-warnings --log-level=error
+      - name: Install dependencies in /api
+        run: |
+          cd api
+          npm i --no-audit --no-fund --progress=false --no-warnings --log-level=error
 
-    - name: Setup SSH
-      uses: webfactory/ssh-agent@v0.5.3
-      with:
-        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-    - name: Deploy to server
-      run: |
-        ssh -o StrictHostKeyChecking=no -p ${{ secrets.SERVER_PORT }} ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'EOF'
-          cd code/navisaction
-          git pull
-          docker compose down
-          docker compose up --build -d
-        EOF
+      - name: Deploy to server
+        run: |
+          ssh -o StrictHostKeyChecking=no -p ${{ secrets.SERVER_PORT }} ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'EOF'
+            cd code/navisaction
+            git pull
+            docker compose down
+            docker compose up --build -d
+          EOF
